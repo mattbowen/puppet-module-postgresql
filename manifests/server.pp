@@ -3,11 +3,8 @@ class postgresql::server($version="8.4",
                          $max_connections=100,
                          $shared_buffers='24MB') {
   include postgresql::client
-
-  $service_name = $operatingsystem ? {
-    "Ubuntu" => "postgresql-${version}",
-    default => "postgresql",
-  }
+  
+  $service_name = "postgresql"
 
   package { postgresql:
     ensure => present,

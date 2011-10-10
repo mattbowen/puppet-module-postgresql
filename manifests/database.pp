@@ -1,8 +1,9 @@
-define postgresql::database($owner, $ensure=present) {
+define postgresql::database($owner="postgres", $ensure=present) {
   $dbexists = "psql -ltA | grep '^$name|'"
-
-  postgresql::user { $owner:
-    ensure => $ensure,
+  
+  $owner_require = $owner ? {
+    "postgres" => undef,
+    default => Postgreql::User[$owner]
   }
 
   if $ensure == 'present' {
@@ -11,7 +12,7 @@ define postgresql::database($owner, $ensure=present) {
       command => "createdb -O $owner $name",
       user => "postgres",
       unless => $dbexists,
-      require => Postgresql::User[$owner],
+      require => $owner_require,
     }
 
 
@@ -21,7 +22,7 @@ define postgresql::database($owner, $ensure=present) {
       command => "dropdb $name",
       user => "postgres",
       onlyif => $dbexists,
-      before => Postgresql::User[$owner],
+      before => $owner_require,
     }
   }
 }
