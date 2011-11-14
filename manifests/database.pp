@@ -6,6 +6,10 @@ define postgresql::database($owner="postgres", $ensure=present) {
     default => Postgreql::User[$owner]
   }
 
+  Exec {
+    require => Package["postgresql-client"],
+  }
+
   if $ensure == 'present' {
 
     exec { "createdb $name":

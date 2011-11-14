@@ -17,7 +17,7 @@ define postgresql::user($ensure=present,
     }
 
     if $password {
-      exec { "set password ${username} ${password}":
+      exec { "set password for ${username}":
         command => "psql -c \"ALTER USER ${username} WITH UNENCRYPTED PASSWORD '${password}';\"",
         user => "postgres",
         require => Exec["createuser $username"],
@@ -28,19 +28,19 @@ define postgresql::user($ensure=present,
     $createdb_option   = $createdb   ? {true => "CREATEDB",   false => "NOCREATEDB"}
     $createrole_option = $createrole ? {true => "CREATEROLE", false => "NOCREATEROLE"}
 
-    exec { "set superuser ${username}":
+    exec { "set superuser option for ${username} ":
       command => "psql -c \"ALTER USER ${username} WITH ${superuser_option};\"",
       user => "postgres",
       require => Exec["createuser $username"],
     }
 
-    exec { "set createdb ${username}":
+    exec { "set createdb option for ${username}":
       command => "psql -c \"ALTER USER ${username} WITH ${createdb_option};\"",
       user => "postgres",
       require => Exec["createuser $username"],
     }
 
-    exec { "set createrole ${username}":
+    exec { "set createrole option for ${username}":
       command => "psql -c \"ALTER USER ${username} WITH ${createrole_option};\"",
       user => "postgres",
       require => Exec["createuser $username"],
@@ -76,7 +76,7 @@ define postgresql::user::privilege($privilege,
         require => Postgresql::User[$user]
     }
 
-    if ensure == 'present' {
+    if ($ensure == present) {
         exec {"grant $privilege on $object to $user":
             command => "psql -c \"GRANT $privilege ON $object TO $user $grantopt;\"",
             user => "postgres",
