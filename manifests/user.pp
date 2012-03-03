@@ -24,7 +24,7 @@ define postgresql::user($ensure=present,
       }
     }
     
-    $superuser_option  = $superuser  ? {true => "SUPSERUSER", false => "NOSUPERUSER"}
+    $superuser_option  = $superuser  ? {true => "SUPERUSER", false => "NOSUPERUSER"}
     $createdb_option   = $createdb   ? {true => "CREATEDB",   false => "NOCREATEDB"}
     $createrole_option = $createrole ? {true => "CREATEROLE", false => "NOCREATEROLE"}
 
