@@ -3,7 +3,7 @@ define postgresql::database($owner="postgres", $ensure=present) {
   
   $owner_require = $owner ? {
     "postgres" => undef,
-    default => Postgreql::User[$owner]
+    default => Postgresql::User[$owner]
   }
 
   Exec {
